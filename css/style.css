@@ -1,0 +1,153 @@
+/* Estilos globales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, label, input, textarea, button, a {
+    font-family: "Times New Roman", Times, serif; /* Fuente unificada */
+    font-size: 18px; /* Tamaño más grande */
+    color: black; /* Color uniforme */
+}
+
+html, body {
+    height: 100%; /* Asegurar que el cuerpo ocupe toda la altura de la ventana */
+    display: flex;
+    flex-direction: column; /* Flexbox para alinear elementos */
+    margin: 0;
+}
+
+body {
+    flex: 1;
+}
+
+/* Encabezados */
+h1, h2 {
+    font-size: 32px; /* Tamaño grande para encabezados principales */
+    font-weight: bold;
+}
+
+h3, h4 {
+    font-size: 24px; /* Tamaño mediano para subtítulos */
+}
+
+/* Formularios */
+label, input, textarea, button {
+    font-size: 20px; /* Tamaño más grande para formularios */
+}
+
+/* Títulos personalizados */
+.custom-title {
+    font-size: 2.5rem;
+    color: black;
+    margin-bottom: 0;
+}
+
+/* Navegación */
+.navbar-nav .nav-link {
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin: 0 15px;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: #d3d3d3;
+}
+
+/* Contenido principal */
+.main-content {
+    margin-top: 20px;
+}
+
+/* Estilos de fondo */
+.bg-light {
+    background-color: #f8f9fa !important;
+}
+
+.bg-dark {
+    background-color: #343a40 !important;
+}
+
+.text-light {
+    color: #ffffff !important;
+}
+
+/* Estilo del footer */
+footer {
+    font-size: 0.8rem; /* Tamaño de letra más grande */
+    padding: 5px 0; /* Espaciado interno moderado */
+    margin: 0; /* Sin margen externo */
+    line-height: 1.2; /* Espaciado entre líneas ligeramente más amplio */
+    background-color: #343a40; /* Fondo oscuro */
+    color: #ffffff; /* Texto claro */
+    width: 100%; /* Ocupar todo el ancho */
+    text-align: center; /* Centrar el texto */
+    position: fixed; /* Fijar el footer en la parte inferior */
+    bottom: 0; /* Alinear al borde inferior */
+    left: 0; /* Alinear al inicio */
+    z-index: 1000; /* Asegurar que esté visible por encima de otros elementos */
+    border-top: 1px solid #222; /* Añadir borde superior para definición */
+}
+
+/* Título con fondo gris */
+.header-title {
+    background-color: #d3d3d3; /* Color gris */
+    padding: 10px 0; /* Espaciado interno */
+    margin: 0; /* Sin márgenes */
+    text-align: center; /* Centrar el texto */
+    font-size: 2.5rem; /* Tamaño del texto */
+    font-weight: bold; /* Negrita */
+    font-family: "Times New Roman", Times, serif; /* Fuente */
+    color: black; /* Color del texto */
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) { /* Para pantallas pequeñas */
+    body {
+        font-size: 16px; /* Reducir el tamaño de la fuente */
+    }
+
+    h1, h2 {
+        font-size: 24px; /* Ajustar encabezados */
+    }
+
+    .navbar-nav {
+        flex-direction: column; /* Menú en columna */
+        align-items: center;
+    }
+
+    .navbar-nav .nav-link {
+        margin: 10px 0; /* Espaciado entre enlaces */
+    }
+
+    .main-content, .home-content, .bg-light {
+        width: 100%; /* Asegurar que el contenido ocupe todo el ancho */
+        margin: 0 auto;
+    }
+
+    form {
+        max-width: 100%; /* Formularios ocupan todo el ancho */
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) { /* Para pantallas medianas */
+    body {
+        font-size: 17px;
+    }
+
+    h1, h2 {
+        font-size: 28px; /* Ajustar encabezados */
+    }
+
+    .navbar-nav .nav-link {
+        margin: 0 10px; /* Reducir el espaciado entre enlaces */
+    }
+}
+
+/* Estilos para el contenedor principal */
+main {
+    flex: 1; /* Empujar el footer hacia abajo */
+}
