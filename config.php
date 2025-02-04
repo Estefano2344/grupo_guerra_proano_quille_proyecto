@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 $server   = "localhost";
-$database = "las_huequitas"; // Asegúrate de que sea la base correcta
+$database = "las_huequitas"; 
 $username = "root";
 $password = "";
 

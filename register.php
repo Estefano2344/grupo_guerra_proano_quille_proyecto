@@ -2,9 +2,6 @@
 // Incluye el archivo de configuración que contiene la conexión a la base de datos
 require 'config.php';
 
-// Inicia la sesión para manejar la autenticación del usuario
-session_start();
-
 // Variables para almacenar mensajes de éxito y error
 $successMessage = null;
 $errorMessage = null;
@@ -13,24 +10,22 @@ $errorMessage = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Obtiene y sanitiza el correo electrónico proporcionado por el usuario
     $email = mysqli_real_escape_string($conn, $_POST['email']);
-    // Obtiene la contraseña proporcionada por el usuario (no se sanitiza porque se usará para verificación)
-    $password = $_POST['password'];
+    // Obtiene y sanitiza la contraseña proporcionada por el usuario
+    $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-    // Consulta la base de datos para obtener el usuario con el correo electrónico proporcionado
-    $sql = "SELECT * FROM usuarios WHERE email = '$email'";
-    $result = mysqli_query($conn, $sql);
-    $user = mysqli_fetch_assoc($result);
+    // Genera un hash de la contraseña para almacenarla de forma segura
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-    // Verifica si el usuario existe y si la contraseña coincide
-    if ($user && password_verify($password, $user['password'])) {
-        // Si las credenciales son válidas, almacena el ID y el correo electrónico del usuario en la sesión
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['email'] = $user['email'];
-        // Establece un mensaje de éxito
-        $successMessage = "Inicio de sesión exitoso. Bienvenido.";
+    // Prepara la consulta SQL para insertar un nuevo usuario en la base de datos
+    $sql = "INSERT INTO usuarios (email, password) VALUES ('$email', '$hashed_password')";
+
+    // Ejecuta la consulta de inserción
+    if (mysqli_query($conn, $sql)) {
+        // Si la inserción es exitosa, establece un mensaje de éxito
+        $successMessage = "Registro exitoso. Ahora puedes iniciar sesión.";
     } else {
-        // Si las credenciales son inválidas, establece un mensaje de error
-        $errorMessage = "Credenciales inválidas. Inténtalo nuevamente.";
+        // Si hay un error, establece un mensaje de error
+        $errorMessage = "Error al registrar el usuario. Inténtalo nuevamente.";
     }
 }
 ?>
@@ -40,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Las Huequitas</title>
+    <title>Register - Las Huequitas</title>
     <!-- Enlaces a Bootstrap y estilos personalizados -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
@@ -50,33 +45,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <header>
         <div class="header-title">LAS HUEQUITAS</div>
     </header>
-
+        
     <!-- Contenido principal de la página -->
-    <main class="d-flex justify-content-center align-items-center" style="min-height: 80vh; flex-direction: column;">
-        <!-- Formulario de inicio de sesión -->
-        <div class="p-4 rounded" style="width: 350px; background-color: #ffffff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-            <form action="" method="POST">
-                <!-- Campo para el correo electrónico -->
-                <div class="mb-3">
-                    <label for="email" class="form-label" style="font-size: 18px;">Email</label>
-                    <input type="email" id="email" name="email" class="form-control" placeholder="e-mail" required style="border: 1px solid #ccc; border-radius: 5px; padding: 12px; font-size: 16px;">
-                </div>
-                <!-- Campo para la contraseña -->
-                <div class="mb-3">
-                    <label for="password" class="form-label" style="font-size: 18px;">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="password" required style="border: 1px solid #ccc; border-radius: 5px; padding: 12px; font-size: 16px;">
-                </div>
-                <!-- Botón para enviar el formulario -->
-                <button type="submit" class="btn btn-dark w-100" style="background-color: black; color: white; padding: 12px; font-size: 18px; border-radius: 5px;">Sign In</button>
-            </form>
-            <!-- Enlace para registrarse -->
-            <div class="text-center mt-3">
-                <a href="register.php" style="font-size: 16px;">Registrarse</a>
+    <main class="container my-5">
+        <h2 class="text-center">REGISTRARSE</h2> <!-- Título de la sección -->
+        <!-- Formulario de registro -->
+        <form action="" method="POST" class="mx-auto bg-light p-4 rounded" style="max-width: 400px;">
+            <!-- Campo para el correo electrónico -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" placeholder="e-mail" required>
             </div>
-        </div>
-        <!-- Botón para volver a la página principal -->
-        <div class="text-center mt-4">
-            <button class="btn btn-dark" style="background-color: black; color: white; padding: 12px; font-size: 18px; width: 150px; border-radius: 5px;" onclick="window.location.href='index.php'">Volver</button>
+            <!-- Campo para la contraseña -->
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" name="password" placeholder="password" required>
+            </div>
+            <!-- Checkbox para aceptar los términos y condiciones -->
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="terms" required>
+                <label class="form-check-label" for="terms">Términos y Condiciones</label>
+            </div>
+            <!-- Descripción debajo de los términos -->
+            <p class="text-muted" style="font-size: 14px; margin-top: -10px;">
+                Al aceptar los términos y condiciones, confirmas que estás de acuerdo con las políticas de uso y privacidad de nuestra página.
+            </p>
+            <!-- Botón para enviar el formulario -->
+            <button type="submit" class="btn btn-dark w-100">Register</button>
+        </form>
+        <!-- Enlace para volver a la página de inicio de sesión -->
+        <div class="text-center mt-3">
+            <a href="login.php" class="btn btn-dark">Volver</a>
         </div>
     </main>
 
@@ -86,14 +85,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title" id="successModalLabel">¡Inicio de Sesión Exitoso!</h5>
+                    <h5 class="modal-title" id="successModalLabel">¡Registro Exitoso!</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
                     <p><?php echo htmlspecialchars($successMessage); ?></p>
                 </div>
                 <div class="modal-footer">
-                    <a href="index.php" class="btn btn-success">OK</a>
+                    <a href="login.php" class="btn btn-success">OK</a>
                 </div>
             </div>
         </div>
@@ -123,6 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Pie de página -->
     <footer class="bg-dark text-light text-center p-2">
         <div>
+            <!-- Enlaces y copyright -->
             <span>Términos de Uso</span> |
             <span>Política de Privacidad</span> |
             <span>&copy; 2006-2024 Las Huequitas</span>
